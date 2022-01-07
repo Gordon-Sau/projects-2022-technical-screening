@@ -7,52 +7,105 @@
 
 ## patterns
 course code
+
 ? and ?
+
 ? or ?
-x units of credit (can ignore "completion of")
-x units of credit in y
+
+x units (of credit) (can ignore "completion of")
+
+x units (of credit) in y
+
 y:
     COMP courses
+
     level n COMP courses
+
     (cousre code1, course code2, .....)
 
 ## structure:
 course node {
-    "course"
+
+    course_code: str
+
 }
+
 evaluate: true if the course is in the course list
 
+
 and node {
+
     left node
+
     right node
+
 }
+
 evaluate: true if both left and right evaluate to true
 
+
 or node {
+
     left node 
+
     right node
+
 }
+
 evaluate: true if left or right evaluate to true
 
 total uoc node {
-    units
+
+    units: int
+
 }
+
 evaluate: no. of course * 6 >= units
 
 comp uoc node {
-    units
+
+    units: int
+
 }
+
 evaluate: no. of course that starts with "COMP" * 6 >= units
 
 level n comp uoc node {
-    units
-    n 
+
+    units: int
+
+    n: int
+
 }
+
 evaluate: no. of course that starts with ("COMP" + str(n)) * 6 >= units
 
 
 set node {
-    units
-    set of courses
+
+    units: int
+
+    set of courses: set[str]
+
 }
+
 evaluate: no. of courses that are in both the courses list and the set of courses * 6 >= units
+
+# grammar after tokenize
+```
+expr := [term]
+    | [term] and [term] 
+    | [term] or [term] 
+
+term := ([expr])
+    | [digits] units
+    | [digits] units in COMP courses
+    | [digits] units in ([course_codes])
+
+course_codes := [course_code], [course_codes] 
+    | [course_code]
+
+course_code := ^[A-Z]{4}\d{4}$
+
+digits := ^\d{4}$
+```
