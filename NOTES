@@ -15,3 +15,46 @@ y:
     COMP courses
     level n COMP courses
     (cousre code1, course code2, .....)
+
+structure:
+
+course node {
+    "course"
+}
+evaluate: true if the course is in the course list
+
+and node {
+    left node
+    right node
+}
+evaluate: true if both left and right evaluate to true
+
+or node {
+    left node 
+    right node
+}
+evaluate: true if left or right evaluate to true
+
+total uoc node {
+    units
+}
+evaluate: no. of course * 6 >= units
+
+comp uoc node {
+    units
+}
+evaluate: no. of course that starts with "COMP" * 6 >= units
+
+level n comp uoc node {
+    units
+    n 
+}
+evaluate: no. of course that starts with ("COMP" + str(n)) * 6 >= units
+
+
+set node {
+    units
+    set of courses
+}
+evaluate: no. of course that is in both the courses list and the set of courses * 6
+    >= units

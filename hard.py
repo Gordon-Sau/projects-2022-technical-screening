@@ -23,6 +23,12 @@ with open("./conditions.json") as f:
     CONDITIONS = json.load(f)
     f.close()
 
+def tokenize(text):
+    
+
+def parseText(text):
+    pass
+
 def is_unlocked(courses_list, target_course):
     """Given a list of course codes a student has taken, return true if the target_course 
     can be unlocked by them.
