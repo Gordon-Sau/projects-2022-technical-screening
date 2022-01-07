@@ -29,10 +29,13 @@ with open("./conditions.json") as f:
 
 def tokenize(text: str):
     tokens = list(filter(
-        lambda s: s not in ('',' ', 'courses'), 
+        lambda s: s not in ('',' ', 'courses'),
         re.split(r"(\W)", text.upper())
     ))
 
+    return clean_tokens(tokens)
+
+def clean_tokens(tokens: list)->list:
     # ignore stuffs before ':'
     if ':' in tokens:
         tokens = tokens[tokens.index(':') + 1 :]
@@ -40,18 +43,22 @@ def tokenize(text: str):
     # ignore 'completion of'
     while 'COMPLETION' in tokens:
         index = tokens.index('COMPLETION')
-        tokens = tokens[:index].extend(tokens[index + 2:])
+        tokens = skip(tokens, index, 2)
 
     # ignore two words after units for easier parsing
-    while 'UNITS' in tokens:
+    while 'CREDIT' in tokens:
         index = tokens.index('UNITS')
-        tokens = tokens[:index + 1].extend(tokens[index + 3:])
+        tokens = skip(tokens, index + 1, 2)
 
     # "4951" -> "COMP4951"
     if (len(tokens) == 1) and tokens[0].isdigit() and len(tokens[0]) == 4:
         tokens[0] = 'COMP' + tokens[0]
 
     return tokens
+
+def skip(tokens:list, start: int, n: int):
+    return tokens[:start] + tokens[start + n:]
+
 
 class CourseNode:
     def __init__(self, code) -> None:
@@ -61,20 +68,18 @@ class CourseNode:
         return self.code in courses_list
 
 class AndNode:
-    def __init__(self, left, right) -> None:
-        self.left = left
-        self.right = right
+    def __init__(self, node_list) -> None:
+        self.list = node_list
 
     def evaluate(self, courses_list)->bool:
-        return self.left.evaluate(courses_list) and self.right.evaluate(courses_list)
+        return all(node.evaluate(courses_list) for node in self.list)
 
 class OrNode:
-    def __init__(self, left, right) -> None:
-        self.left = left
-        self.right = right
+    def __init__(self, node_list) -> None:
+        self.list = node_list
     
     def evaluate(self, courses_list)->bool:
-        return self.left.evaluate(courses_list) or self.right.evaluate(courses_list)
+        return any(node.evaluate(courses_list) for node in self.list)
 
 class TotalUOCNode:
     def __init__(self, units) -> None:
@@ -88,8 +93,9 @@ class COMPUOCNode:
         self.units = units
     
     def evaluate(self, courses_list)->bool:
-        return (len(filter(lambda course: course.startswith("COMP"), courses_list))
-            * UNIT) >= self.units
+        return (len(
+            [course for course in courses_list if course.startswith("COMP")]
+        ) * UNIT) >= self.units
 
 class LevelNode:
     def __init__(self, units, level) -> None:
@@ -97,9 +103,9 @@ class LevelNode:
         self.level = level
 
     def evaluate(self, courses_list)->bool:
-        return (len(filter(
-                lambda course: course.startswith("COMP" + str(self.level)),
-                courses_list))* UNIT) >= self.units
+        return (len(
+            [course for course in courses_list if course.startswith("COMP" + str(self.level))]
+        )* UNIT) >= self.units
 
 class SetNode:
     def __init__(self, units, courses_set) -> None:
@@ -107,21 +113,80 @@ class SetNode:
         self.set:set = courses_set
 
     def evaluate(self, courses_list)->bool:
-        return ((len(course in self.units for course in courses_list) * UNIT)
-            >= self.units)
+        return ((len(
+            [course for course in courses_list if course in self.set]
+        ) * UNIT) >= self.units)
 
 class NoneNode:
     def evaluate(self, courses_list)->bool:
         return True
 
-def parseText(text: str):
+def parse_text(text: str):
     tokens = tokenize(text)
     if len(tokens) == 0:
         return NoneNode()
-    index = 0
+    return expr(tokens, 0)[0]
+
+def expr(tokens, index):
+    first_node, index = term(tokens, index)
+
+    end = len(tokens)
+    if index >= end:
+        return first_node, index
+    elif tokens[index] in ('AND', 'OR'):
+        node_list = [first_node]
+        if tokens[index] == 'AND':
+            node_list, index = create_node_list(node_list, tokens, index, 'AND')
+            return AndNode(node_list), index
+        else:
+            node_list, index = create_node_list(node_list, tokens, index, 'OR')
+            return OrNode(node_list), index
+    else:
+        return first_node, index
+
+def create_node_list(node_list, tokens, index, keyword):
+    while index < len(tokens) and tokens[index] == keyword:
+        next_node, index = term(tokens, index + 1)
+        node_list.append(next_node)
+    return node_list, index
+
+def term(tokens, index):
+    if tokens[index] == '(':
+        node, index = expr(tokens, index + 1)
+        assert tokens[index] == ')'
+        return node, index + 1
+    elif is_course_code(tokens[index]):
+        return CourseNode(tokens[index]), index + 1
+    else:
+        units = int(tokens[index])
+        assert tokens[index + 1] == 'UNITS'
+        if index + 2 < len(tokens) and tokens[index + 2] == 'IN':
+            if tokens[index + 3] == 'COMP':
+                return COMPUOCNode(units), index + 4
+            elif tokens[index + 3] == 'LEVEL':
+                return LevelNode(units, int(tokens[index + 4])), index + 6
+            elif tokens[index + 3] == '(':
+                courses_set, index = get_courses_set(tokens, index + 4)
+                return SetNode(units, courses_set), index
+            else:
+                raise Exception(f"unexpected tokens {tokens} {index}")
+        else:
+            return TotalUOCNode(units), index + 2
+
+def get_courses_set(tokens, index):
+    courses_set = set()
+    courses_set.add(tokens[index])
+
+    while tokens[index + 1] != ')':
+        assert tokens[index + 1] == ','
+        courses_set.add(tokens[index + 2])
+        index += 2
+    
+    return courses_set, index + 2
 
 
-
+def is_course_code(token):
+    return re.match(r'^[A-Z]{4}\d{4}$', token)
 
 def is_unlocked(courses_list, target_course):
     """Given a list of course codes a student has taken, return true if the target_course 
@@ -132,13 +197,6 @@ def is_unlocked(courses_list, target_course):
 
     You can assume all courses are worth 6 units of credit
     """
-    
-    # TODO: COMPLETE THIS FUNCTION!!!
-    
-    return True
 
-
-
-
-
-    
+    evaluator = parse_text(CONDITIONS[target_course])
+    return evaluator.evaluate(set(courses_list))
