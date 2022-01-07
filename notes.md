@@ -17,9 +17,9 @@ x units (of credit) (can ignore "completion of")
 x units (of credit) in y
 
 y:
-    COMP courses
+    COMP (courses)
 
-    level n COMP courses
+    level n COMP (courses)
 
     (cousre code1, course code2, .....)
 
@@ -102,7 +102,8 @@ term := [expr]
     | ([expr])
     | [course_code]
     | [digits] units
-    | [digits] units in COMP courses
+    | [digits] units in COMP
+    | [digits] units in level n COMP
     | [digits] units in ([course_codes])
 
 course_codes := [course_code], [course_codes] 
