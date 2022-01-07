@@ -100,6 +100,7 @@ expr := [term]
 term := [expr] 
     /* NOTE: may not have parentheses e.g. "COMP1531": "COMP1511 or DPST1091 or COMP1917 or COMP1921" */
     | ([expr])
+    | [course_code]
     | [digits] units
     | [digits] units in COMP courses
     | [digits] units in ([course_codes])
