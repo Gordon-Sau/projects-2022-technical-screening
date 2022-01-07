@@ -3,7 +3,7 @@
 2. if the condition is a string of only numbers, turn it into "COMP????" (e.g. "4951" -> "COMP4951")
 3. case insensitive
 4. need to distinguish COMP courses and other courses
-5. if the token is "oc", turns it into "of" (mispell "of" to "oc" in COMP9491)
+5. ignore the two words after units (redundant and mispell "of" to "oc" in COMP9491)
 
 ## patterns
 course code
@@ -103,7 +103,7 @@ term := [expr]
     | [course_code]
     | [digits] units
     | [digits] units in COMP
-    | [digits] units in level n COMP
+    | [digits] units in level [digit] COMP
     | [digits] units in ([course_codes])
 
 course_codes := [course_code], [course_codes] 
