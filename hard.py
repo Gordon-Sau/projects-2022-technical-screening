@@ -29,7 +29,7 @@ with open("./conditions.json") as f:
 
 def tokenize(text: str):
     tokens = list(filter(
-        lambda s: s not in ('',' '), 
+        lambda s: s not in ('',' ', 'courses'), 
         re.split(r"(\W)", text.upper())
     ))
 
@@ -110,11 +110,16 @@ class SetNode:
         return ((len(course in self.units for course in courses_list) * UNIT)
             >= self.units)
 
+class NoneNode:
+    def evaluate(self, courses_list)->bool:
+        return True
 
 def parseText(text: str):
     tokens = tokenize(text)
+    if len(tokens) == 0:
+        return NoneNode()
     index = 0
-    
+
 
 
 
