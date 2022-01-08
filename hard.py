@@ -145,6 +145,7 @@ def expr(tokens, index):
     if index >= end:
         return first_node, index
     elif tokens[index] in ('AND', 'OR'):
+        # create AndNode/OrNode
         node_list = [first_node]
         if tokens[index] == 'AND':
             node_list, index = create_node_list(node_list, tokens, index, 'AND')
@@ -163,25 +164,33 @@ def create_node_list(node_list, tokens, index, keyword):
 
 def term(tokens, index):
     if tokens[index] == '(':
+        # ([expr])
         node, index = expr(tokens, index + 1)
         assert tokens[index] == ')'
         return node, index + 1
     elif is_course_code(tokens[index]):
+        # [course_code]
         return CourseNode(tokens[index]), index + 1
     else:
+        # [digits] ...
         units = int(tokens[index])
         assert tokens[index + 1] == 'UNITS'
         if index + 2 < len(tokens) and tokens[index + 2] == 'IN':
+
             if tokens[index + 3] == 'LEVEL':
+                # [digits] units in level [digit] [course_prefix]
                 return PrefixNode(units, tokens[index + 5] + tokens[index + 4]), index + 6
             elif tokens[index + 3] == '(':
+                # [digits] units in ([course_codes])
                 courses_set, index = get_courses_set(tokens, index + 4)
                 return SetNode(units, courses_set), index
-            elif re.match(r"^[A-Z]{4}$", tokens[index + 3]):
+            elif is_course_prefix(tokens[index + 3]):
+                # [digits] units in [course_prefix]
                 return PrefixNode(units, tokens[index + 3]), index + 4
             else:
                 raise Exception(f"unexpected tokens {tokens} {index}")
         else:
+            # [digits] units
             return TotalUOCNode(units), index + 2
 
 def get_courses_set(tokens, index):
@@ -198,6 +207,9 @@ def get_courses_set(tokens, index):
 
 def is_course_code(token):
     return re.match(r'^[A-Z]{4}\d{4}$', token)
+
+def is_course_prefix(token):
+    return re.match(r"^[A-Z]{4}$", token)
 
 def is_unlocked(courses_list, target_course):
     """Given a list of course codes a student has taken, return true if the target_course 
