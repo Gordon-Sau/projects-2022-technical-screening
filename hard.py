@@ -134,7 +134,6 @@ class NoneNode:
 
 def parse_text(text: str):
     tokens = tokenize(text)
-    # print(tokens)
     if len(tokens) == 0:
         return NoneNode()
     return expr(tokens, 0)[0]
@@ -212,6 +211,3 @@ def is_unlocked(courses_list, target_course):
 
     evaluator = parse_text(CONDITIONS[target_course])
     return evaluator.evaluate(set(courses_list))
-
-for course in CONDITIONS:
-    print(course, parse_text(CONDITIONS[course]))
