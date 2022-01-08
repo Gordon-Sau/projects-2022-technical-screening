@@ -93,6 +93,7 @@ term := [expr]
     /* NOTE: may not have parentheses e.g. "COMP1531": "COMP1511 or DPST1091 or COMP1917 or COMP1921" */
     | ([expr])
     | [course_code]
+    | [four-digits]
     | [digits] units
     | [digits] units in [course_prefix]
     | [digits] units in level [digit] [course_prefix]
@@ -103,7 +104,9 @@ course_codes := [course_code], [course_codes]
 
 course_code := ^[A-Z]{4}\d{4}$
 
-digits := ^\d{4}$
+four-digits := ^\d{4}$
+
+digits := ^\d+$
 
 course_prefix := ^[A-Z]{4}$
 ```

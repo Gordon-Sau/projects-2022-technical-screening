@@ -50,10 +50,6 @@ def clean_tokens(tokens: list)->list:
         index = tokens.index('CREDIT')
         tokens = skip(tokens, index - 1, 2)
 
-    # "4951" -> "COMP4951"
-    if (len(tokens) == 1) and tokens[0].isdigit() and len(tokens[0]) == 4:
-        tokens[0] = 'COMP' + tokens[0]
-
     return tokens
 
 def skip(tokens:list, start: int, n: int):
@@ -171,45 +167,60 @@ def term(tokens, index):
     elif is_course_code(tokens[index]):
         # [course_code]
         return CourseNode(tokens[index]), index + 1
-    else:
+    elif tokens[index].isdigit():
         # [digits] ...
         units = int(tokens[index])
-        assert tokens[index + 1] == 'UNITS'
-        if index + 2 < len(tokens) and tokens[index + 2] == 'IN':
+        if (index + 1 < len(tokens)) and tokens[index + 1] == 'UNITS':
+            if index + 2 < len(tokens) and tokens[index + 2] == 'IN':
 
-            if tokens[index + 3] == 'LEVEL':
-                # [digits] units in level [digit] [course_prefix]
-                return PrefixNode(units, tokens[index + 5] + tokens[index + 4]), index + 6
-            elif tokens[index + 3] == '(':
-                # [digits] units in ([course_codes])
-                courses_set, index = get_courses_set(tokens, index + 4)
-                return SetNode(units, courses_set), index
-            elif is_course_prefix(tokens[index + 3]):
-                # [digits] units in [course_prefix]
-                return PrefixNode(units, tokens[index + 3]), index + 4
-            else:
+                if tokens[index + 3] == 'LEVEL':
+                    # [digits] units in level [digit] [course_prefix]
+                    return PrefixNode(units, tokens[index + 5] + tokens[index + 4]), index + 6
+                if tokens[index + 3] == '(':
+                    # [digits] units in ([course_codes])
+                    courses_set, index = get_courses_set(tokens, index + 4)
+                    return SetNode(units, courses_set), index
+                if is_course_prefix(tokens[index + 3]):
+                    # [digits] units in [course_prefix]
+                    return PrefixNode(units, tokens[index + 3]), index + 4
                 raise Exception(f"unexpected tokens {tokens} {index}")
+            else:
+                # [digits] units
+                return TotalUOCNode(units), index + 2
         else:
-            # [digits] units
-            return TotalUOCNode(units), index + 2
+            # [four-digits]
+            if len(tokens[index]) == 4:
+                return CourseNode('COMP' + tokens[index]), index + 1
+            raise Exception(f"unexpected tokens {tokens} {index}")
 
 def get_courses_set(tokens, index):
     courses_set = set()
-    courses_set.add(tokens[index])
+    courses_set.add(course_code(tokens[index]))
 
     while tokens[index + 1] != ')':
         assert tokens[index + 1] == ','
-        courses_set.add(tokens[index + 2])
+        courses_set.add(course_code(tokens[index + 2]))
         index += 2
     
     return courses_set, index + 2
 
 
-def is_course_code(token):
-    return re.match(r'^[A-Z]{4}\d{4}$', token)
+def course_code(token: str) ->str:
+    if (is_course_code(token)):
+        return token
+    if is_four_digits(token):
+        return 'COMP' + token
+    raise Exception("Unexpected token {token} {index}")
 
-def is_course_prefix(token):
-    return re.match(r"^[A-Z]{4}$", token)
+def is_course_code(token: str) -> bool:
+    return (len(token) == 8) and token[:4].isalpha() and token[4:].isdigit()
+    # return re.match(r'^[A-Z]{4}\d{4}$', token)
+
+def is_course_prefix(token: str) -> bool:
+    return (token.isalpha()) and (len(token) == 4)
+
+def is_four_digits(token: str) -> bool:
+    return (token.isdigit()) and (len(token) == 4)
 
 def is_unlocked(courses_list, target_course):
     """Given a list of course codes a student has taken, return true if the target_course 

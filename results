@@ -341,11 +341,11 @@ COMP4953: CourseNode {
 COMP9301: SetNode {
 	units: 12,
 	set: {
-		COMP6443,
-		COMP6445,
+		COMP6447,
 		COMP6843,
-		COMP6845,
-		COMP6447 
+		COMP6445,
+		COMP6443,
+		COMP6845 
 	} 
 }
 COMP9302: AndNode {
@@ -363,11 +363,11 @@ COMP9302: AndNode {
 		SetNode {
 			units: 12,
 			set: {
-				COMP6443,
-				COMP6445,
+				COMP6447,
 				COMP6843,
-				COMP6845,
-				COMP6447 
+				COMP6445,
+				COMP6443,
+				COMP6845 
 			} 
 		}
 	]
@@ -442,9 +442,9 @@ COMP9447: OrNode {
 COMP9491: SetNode {
 	units: 18,
 	set: {
-		COMP9418,
+		COMP9444,
 		COMP9417,
-		COMP9447,
-		COMP9444 
+		COMP9418,
+		COMP9447 
 	} 
 }
