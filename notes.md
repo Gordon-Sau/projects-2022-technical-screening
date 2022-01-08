@@ -103,7 +103,7 @@ course_codes := [course_code], [course_codes]
 
 course_code := ^[A-Z]{4}\d{4}$
 
-digits := ^\d{4}$
+digits := ^\d+$
 
 course_prefix := ^[A-Z]{4}$
 ```
