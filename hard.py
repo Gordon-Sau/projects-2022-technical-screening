@@ -29,7 +29,7 @@ with open("./conditions.json") as f:
 
 def tokenize(text: str):
     tokens = list(filter(
-        lambda s: s not in ('',' ', 'courses'),
+        lambda s: s not in ('',' ', 'COURSES'),
         re.split(r"(\W)", text.upper())
     ))
 
@@ -47,8 +47,8 @@ def clean_tokens(tokens: list)->list:
 
     # ignore two words after units for easier parsing
     while 'CREDIT' in tokens:
-        index = tokens.index('UNITS')
-        tokens = skip(tokens, index + 1, 2)
+        index = tokens.index('CREDIT')
+        tokens = skip(tokens, index - 1, 2)
 
     # "4951" -> "COMP4951"
     if (len(tokens) == 1) and tokens[0].isdigit() and len(tokens[0]) == 4:
@@ -67,12 +67,18 @@ class CourseNode:
     def evaluate(self, courses_list)->bool:
         return self.code in courses_list
 
+    def __str__(self) -> str:
+        return f"CourseNode {{course: {self.code}}}"
+
 class AndNode:
     def __init__(self, node_list) -> None:
         self.list = node_list
 
     def evaluate(self, courses_list)->bool:
         return all(node.evaluate(courses_list) for node in self.list)
+    
+    def __str__(self) -> str:
+        return f"AndNode {{ nodes: [{','.join(str(item) for item in self.list)}]}}"
 
 class OrNode:
     def __init__(self, node_list) -> None:
@@ -80,6 +86,9 @@ class OrNode:
     
     def evaluate(self, courses_list)->bool:
         return any(node.evaluate(courses_list) for node in self.list)
+    
+    def __str__(self) -> str:
+        return f"OrNode {{nodes: [{','.join(str(item) for item in self.list)}]}}"
 
 class TotalUOCNode:
     def __init__(self, units) -> None:
@@ -87,6 +96,9 @@ class TotalUOCNode:
     
     def evaluate(self, courses_list)->bool:
         return len(courses_list) * UNIT >= self.units
+    
+    def __str__(self) -> str:
+        return f"TotalUOCNode {{ units: {self.units}}}"
 
 class PrefixNode:
     def __init__(self, units, prefix) -> None:
@@ -97,6 +109,9 @@ class PrefixNode:
         return (len(
             [course for course in courses_list if course.startswith(self.prefix)]
         ) * UNIT) >= self.units
+    
+    def __str__(self) -> str:
+        return f"PrefixNode {{units: {self.units}, prefix: {self.prefix} }}"
 
 class SetNode:
     def __init__(self, units, courses_set) -> None:
@@ -108,12 +123,18 @@ class SetNode:
             [course for course in courses_list if course in self.set]
         ) * UNIT) >= self.units)
 
+    def __str__(self) -> str:
+        return f"SetNode {{units: {self.units}, set: {{ {', '.join(str(item) for item in self.set)} }} }}"
+
 class NoneNode:
     def evaluate(self, courses_list)->bool:
         return True
+    def __str__(self) -> str:
+        return "NoneNode {}"
 
 def parse_text(text: str):
     tokens = tokenize(text)
+    # print(tokens)
     if len(tokens) == 0:
         return NoneNode()
     return expr(tokens, 0)[0]
@@ -191,3 +212,6 @@ def is_unlocked(courses_list, target_course):
 
     evaluator = parse_text(CONDITIONS[target_course])
     return evaluator.evaluate(set(courses_list))
+
+for course in CONDITIONS:
+    print(course, parse_text(CONDITIONS[course]))
