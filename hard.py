@@ -88,24 +88,15 @@ class TotalUOCNode:
     def evaluate(self, courses_list)->bool:
         return len(courses_list) * UNIT >= self.units
 
-class COMPUOCNode:
-    def __init__(self, units) -> None:
+class PrefixNode:
+    def __init__(self, units, prefix) -> None:
         self.units = units
-    
+        self.prefix = prefix
+
     def evaluate(self, courses_list)->bool:
         return (len(
-            [course for course in courses_list if course.startswith("COMP")]
+            [course for course in courses_list if course.startswith(self.prefix)]
         ) * UNIT) >= self.units
-
-class LevelNode:
-    def __init__(self, units, level) -> None:
-        self.units = units
-        self.level = level
-
-    def evaluate(self, courses_list)->bool:
-        return (len(
-            [course for course in courses_list if course.startswith("COMP" + str(self.level))]
-        )* UNIT) >= self.units
 
 class SetNode:
     def __init__(self, units, courses_set) -> None:
@@ -161,13 +152,13 @@ def term(tokens, index):
         units = int(tokens[index])
         assert tokens[index + 1] == 'UNITS'
         if index + 2 < len(tokens) and tokens[index + 2] == 'IN':
-            if tokens[index + 3] == 'COMP':
-                return COMPUOCNode(units), index + 4
-            elif tokens[index + 3] == 'LEVEL':
-                return LevelNode(units, int(tokens[index + 4])), index + 6
+            if tokens[index + 3] == 'LEVEL':
+                return PrefixNode(units, tokens[index + 5] + tokens[index + 4]), index + 6
             elif tokens[index + 3] == '(':
                 courses_set, index = get_courses_set(tokens, index + 4)
                 return SetNode(units, courses_set), index
+            elif re.match(r"^[A-Z]{4}$", tokens[index + 3]):
+                return PrefixNode(units, tokens[index + 3]), index + 4
             else:
                 raise Exception(f"unexpected tokens {tokens} {index}")
         else:

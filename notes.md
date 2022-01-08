@@ -62,23 +62,15 @@ total uoc node {
 
 evaluate: no. of course * 6 >= units
 
-comp uoc node {
+prefix node {
 
     units: int
 
-}
-
-evaluate: no. of course that starts with "COMP" * 6 >= units
-
-level n comp uoc node {
-
-    units: int
-
-    n: int
+    prefix: str
 
 }
 
-evaluate: no. of course that starts with ("COMP" + str(n)) * 6 >= units
+evaluate: (no. of course that starts with prefix) * 6 >= units
 
 
 set node {
@@ -102,8 +94,8 @@ term := [expr]
     | ([expr])
     | [course_code]
     | [digits] units
-    | [digits] units in COMP
-    | [digits] units in level [digit] COMP
+    | [digits] units in [course_prefix]
+    | [digits] units in level [digit] [course_prefix]
     | [digits] units in ([course_codes])
 
 course_codes := [course_code], [course_codes] 
@@ -112,4 +104,6 @@ course_codes := [course_code], [course_codes]
 course_code := ^[A-Z]{4}\d{4}$
 
 digits := ^\d{4}$
+
+course_prefix := ^[A-Z]{4}$
 ```
