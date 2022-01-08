@@ -223,3 +223,32 @@ def is_unlocked(courses_list, target_course):
 
     evaluator = parse_text(CONDITIONS[target_course])
     return evaluator.evaluate(set(courses_list))
+
+# better formatting
+def format(text: str) -> str:
+    depth = 0
+    ret: str = ""
+    nextLine = False
+    for c in text:
+        if nextLine:
+            if c == ' ':
+                continue
+            ret += '\n' + '\t' * depth
+            nextLine = False
+    
+        if c in (")", "]", "}"):
+            if depth > 0:
+                depth -= 1
+                ret += '\n' + '\t' * depth + c
+        else:
+            if c == ',':
+                nextLine = True
+            elif c in ("(", "[", "{"):
+                depth += 1
+                nextLine = True
+            ret += c
+    return ret
+
+if __name__ == "__main__":
+    for course in CONDITIONS:
+        print(course + ': ' + format(str(parse_text(CONDITIONS[course]))))

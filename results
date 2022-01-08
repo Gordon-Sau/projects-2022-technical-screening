@@ -1,35 +1,449 @@
-COMP1511 ,  NoneNode {}
-COMP1521 ,  OrNode {nodes: [CourseNode {course: COMP1511},CourseNode {course: DPST1091},CourseNode {course: COMP1911},CourseNode {course: COMP1917}]}
-COMP1531 ,  OrNode {nodes: [CourseNode {course: COMP1511},CourseNode {course: DPST1091},CourseNode {course: COMP1917},CourseNode {course: COMP1921}]}
-COMP2041 ,  OrNode {nodes: [CourseNode {course: COMP1511},CourseNode {course: DPST1091},CourseNode {course: COMP1917},CourseNode {course: COMP1921}]}
-COMP2111 ,  AndNode { nodes: [CourseNode {course: MATH1081},OrNode {nodes: [CourseNode {course: COMP1511},CourseNode {course: DPST1091},CourseNode {course: COMP1917},CourseNode {course: COMP1921}]}]}
-COMP2121 ,  OrNode {nodes: [CourseNode {course: COMP1917},CourseNode {course: COMP1921},CourseNode {course: COMP1511},CourseNode {course: DPST1091},CourseNode {course: COMP1521},CourseNode {course: DPST1092},AndNode { nodes: [CourseNode {course: COMP1911},CourseNode {course: MTRN2500}]}]}
-COMP2511 ,  AndNode { nodes: [CourseNode {course: COMP1531},OrNode {nodes: [CourseNode {course: COMP2521},CourseNode {course: COMP1927}]}]}
-COMP2521 ,  OrNode {nodes: [CourseNode {course: COMP1511},CourseNode {course: DPST1091},CourseNode {course: COMP1917},CourseNode {course: COMP1921}]}
-COMP3121 ,  OrNode {nodes: [CourseNode {course: COMP1927},CourseNode {course: COMP2521}]}
-COMP3131 ,  OrNode {nodes: [CourseNode {course: COMP2511},CourseNode {course: COMP2911}]}
-COMP3141 ,  OrNode {nodes: [CourseNode {course: COMP1927},CourseNode {course: COMP2521}]}
-COMP3151 ,  OrNode {nodes: [CourseNode {course: COMP1927},AndNode { nodes: [OrNode {nodes: [CourseNode {course: COMP1521},CourseNode {course: DPST1092}]},CourseNode {course: COMP2521}]}]}
-COMP3153 ,  CourseNode {course: MATH1081}
-COMP3161 ,  OrNode {nodes: [CourseNode {course: COMP2521},CourseNode {course: COMP1927}]}
-COMP3211 ,  OrNode {nodes: [CourseNode {course: COMP3222},CourseNode {course: ELEC2141}]}
-COMP3900 ,  AndNode { nodes: [CourseNode {course: COMP1531},OrNode {nodes: [CourseNode {course: COMP2521},CourseNode {course: COMP1927}]},TotalUOCNode { units: 102}]}
-COMP3901 ,  AndNode { nodes: [PrefixNode {units: 12, prefix: COMP1 },PrefixNode {units: 18, prefix: COMP2 }]}
-COMP3902 ,  AndNode { nodes: [CourseNode {course: COMP3901},PrefixNode {units: 12, prefix: COMP3 }]}
-COMP4121 ,  OrNode {nodes: [CourseNode {course: COMP3121},CourseNode {course: COMP3821}]}
-COMP4128 ,  OrNode {nodes: [CourseNode {course: COMP3821},AndNode { nodes: [CourseNode {course: COMP3121},PrefixNode {units: 12, prefix: COMP3 }]}]}
-COMP4141 ,  AndNode { nodes: [CourseNode {course: MATH1081},OrNode {nodes: [CourseNode {course: COMP1927},CourseNode {course: COMP2521}]}]}
-COMP4161 ,  TotalUOCNode { units: 18}
-COMP4336 ,  CourseNode {course: COMP3331}
-COMP4418 ,  CourseNode {course: COMP3411}
-COMP4601 ,  AndNode { nodes: [OrNode {nodes: [CourseNode {course: COMP2511},CourseNode {course: COMP2911}]},TotalUOCNode { units: 24}]}
-COMP4951 ,  PrefixNode {units: 36, prefix: COMP }
-COMP4952 ,  CourseNode {course: COMP4951}
-COMP4953 ,  CourseNode {course: COMP4952}
-COMP9301 ,  SetNode {units: 12, set: { COMP6447, COMP6443, COMP6445, COMP6845, COMP6843 } }
-COMP9302 ,  AndNode { nodes: [OrNode {nodes: [CourseNode {course: COMP6441},CourseNode {course: COMP6841}]},SetNode {units: 12, set: { COMP6447, COMP6443, COMP6445, COMP6845, COMP6843 } }]}
-COMP9417 ,  AndNode { nodes: [CourseNode {course: MATH1081},OrNode {nodes: [OrNode {nodes: [CourseNode {course: COMP1531},CourseNode {course: COMP2041}]},OrNode {nodes: [CourseNode {course: COMP1927},CourseNode {course: COMP2521}]}]}]}
-COMP9418 ,  OrNode {nodes: [CourseNode {course: MATH5836},CourseNode {course: COMP9417}]}
-COMP9444 ,  OrNode {nodes: [CourseNode {course: COMP1927},CourseNode {course: COMP2521},CourseNode {course: MTRN3500}]}
-COMP9447 ,  OrNode {nodes: [CourseNode {course: COMP6441},CourseNode {course: COMP6841},CourseNode {course: COMP3441}]}
-COMP9491 ,  SetNode {units: 18, set: { COMP9444, COMP9417, COMP9447, COMP9418 } }
+COMP1511: NoneNode {
+}
+COMP1521: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1511
+		},
+		CourseNode {
+			course: DPST1091
+		},
+		CourseNode {
+			course: COMP1911
+		},
+		CourseNode {
+			course: COMP1917
+		}
+	]
+}
+COMP1531: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1511
+		},
+		CourseNode {
+			course: DPST1091
+		},
+		CourseNode {
+			course: COMP1917
+		},
+		CourseNode {
+			course: COMP1921
+		}
+	]
+}
+COMP2041: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1511
+		},
+		CourseNode {
+			course: DPST1091
+		},
+		CourseNode {
+			course: COMP1917
+		},
+		CourseNode {
+			course: COMP1921
+		}
+	]
+}
+COMP2111: AndNode {
+	nodes: [
+		CourseNode {
+			course: MATH1081
+		},
+		OrNode {
+			nodes: [
+				CourseNode {
+					course: COMP1511
+				},
+				CourseNode {
+					course: DPST1091
+				},
+				CourseNode {
+					course: COMP1917
+				},
+				CourseNode {
+					course: COMP1921
+				}
+			]
+		}
+	]
+}
+COMP2121: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1917
+		},
+		CourseNode {
+			course: COMP1921
+		},
+		CourseNode {
+			course: COMP1511
+		},
+		CourseNode {
+			course: DPST1091
+		},
+		CourseNode {
+			course: COMP1521
+		},
+		CourseNode {
+			course: DPST1092
+		},
+		AndNode {
+			nodes: [
+				CourseNode {
+					course: COMP1911
+				},
+				CourseNode {
+					course: MTRN2500
+				}
+			]
+		}
+	]
+}
+COMP2511: AndNode {
+	nodes: [
+		CourseNode {
+			course: COMP1531
+		},
+		OrNode {
+			nodes: [
+				CourseNode {
+					course: COMP2521
+				},
+				CourseNode {
+					course: COMP1927
+				}
+			]
+		}
+	]
+}
+COMP2521: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1511
+		},
+		CourseNode {
+			course: DPST1091
+		},
+		CourseNode {
+			course: COMP1917
+		},
+		CourseNode {
+			course: COMP1921
+		}
+	]
+}
+COMP3121: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1927
+		},
+		CourseNode {
+			course: COMP2521
+		}
+	]
+}
+COMP3131: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP2511
+		},
+		CourseNode {
+			course: COMP2911
+		}
+	]
+}
+COMP3141: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1927
+		},
+		CourseNode {
+			course: COMP2521
+		}
+	]
+}
+COMP3151: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1927
+		},
+		AndNode {
+			nodes: [
+				OrNode {
+					nodes: [
+						CourseNode {
+							course: COMP1521
+						},
+						CourseNode {
+							course: DPST1092
+						}
+					]
+				},
+				CourseNode {
+					course: COMP2521
+				}
+			]
+		}
+	]
+}
+COMP3153: CourseNode {
+	course: MATH1081
+}
+COMP3161: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP2521
+		},
+		CourseNode {
+			course: COMP1927
+		}
+	]
+}
+COMP3211: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP3222
+		},
+		CourseNode {
+			course: ELEC2141
+		}
+	]
+}
+COMP3900: AndNode {
+	nodes: [
+		CourseNode {
+			course: COMP1531
+		},
+		OrNode {
+			nodes: [
+				CourseNode {
+					course: COMP2521
+				},
+				CourseNode {
+					course: COMP1927
+				}
+			]
+		},
+		TotalUOCNode {
+			units: 102
+		}
+	]
+}
+COMP3901: AndNode {
+	nodes: [
+		PrefixNode {
+			units: 12,
+			prefix: COMP1 
+		},
+		PrefixNode {
+			units: 18,
+			prefix: COMP2 
+		}
+	]
+}
+COMP3902: AndNode {
+	nodes: [
+		CourseNode {
+			course: COMP3901
+		},
+		PrefixNode {
+			units: 12,
+			prefix: COMP3 
+		}
+	]
+}
+COMP4121: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP3121
+		},
+		CourseNode {
+			course: COMP3821
+		}
+	]
+}
+COMP4128: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP3821
+		},
+		AndNode {
+			nodes: [
+				CourseNode {
+					course: COMP3121
+				},
+				PrefixNode {
+					units: 12,
+					prefix: COMP3 
+				}
+			]
+		}
+	]
+}
+COMP4141: AndNode {
+	nodes: [
+		CourseNode {
+			course: MATH1081
+		},
+		OrNode {
+			nodes: [
+				CourseNode {
+					course: COMP1927
+				},
+				CourseNode {
+					course: COMP2521
+				}
+			]
+		}
+	]
+}
+COMP4161: TotalUOCNode {
+	units: 18
+}
+COMP4336: CourseNode {
+	course: COMP3331
+}
+COMP4418: CourseNode {
+	course: COMP3411
+}
+COMP4601: AndNode {
+	nodes: [
+		OrNode {
+			nodes: [
+				CourseNode {
+					course: COMP2511
+				},
+				CourseNode {
+					course: COMP2911
+				}
+			]
+		},
+		TotalUOCNode {
+			units: 24
+		}
+	]
+}
+COMP4951: PrefixNode {
+	units: 36,
+	prefix: COMP 
+}
+COMP4952: CourseNode {
+	course: COMP4951
+}
+COMP4953: CourseNode {
+	course: COMP4952
+}
+COMP9301: SetNode {
+	units: 12,
+	set: {
+		COMP6845,
+		COMP6843,
+		COMP6445,
+		COMP6447,
+		COMP6443 
+	} 
+}
+COMP9302: AndNode {
+	nodes: [
+		OrNode {
+			nodes: [
+				CourseNode {
+					course: COMP6441
+				},
+				CourseNode {
+					course: COMP6841
+				}
+			]
+		},
+		SetNode {
+			units: 12,
+			set: {
+				COMP6845,
+				COMP6843,
+				COMP6445,
+				COMP6447,
+				COMP6443 
+			} 
+		}
+	]
+}
+COMP9417: AndNode {
+	nodes: [
+		CourseNode {
+			course: MATH1081
+		},
+		OrNode {
+			nodes: [
+				OrNode {
+					nodes: [
+						CourseNode {
+							course: COMP1531
+						},
+						CourseNode {
+							course: COMP2041
+						}
+					]
+				},
+				OrNode {
+					nodes: [
+						CourseNode {
+							course: COMP1927
+						},
+						CourseNode {
+							course: COMP2521
+						}
+					]
+				}
+			]
+		}
+	]
+}
+COMP9418: OrNode {
+	nodes: [
+		CourseNode {
+			course: MATH5836
+		},
+		CourseNode {
+			course: COMP9417
+		}
+	]
+}
+COMP9444: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP1927
+		},
+		CourseNode {
+			course: COMP2521
+		},
+		CourseNode {
+			course: MTRN3500
+		}
+	]
+}
+COMP9447: OrNode {
+	nodes: [
+		CourseNode {
+			course: COMP6441
+		},
+		CourseNode {
+			course: COMP6841
+		},
+		CourseNode {
+			course: COMP3441
+		}
+	]
+}
+COMP9491: SetNode {
+	units: 18,
+	set: {
+		COMP9444,
+		COMP9418,
+		COMP9417,
+		COMP9447 
+	} 
+}
