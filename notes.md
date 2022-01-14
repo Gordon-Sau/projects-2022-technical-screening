@@ -86,12 +86,10 @@ evaluate: no. of courses that are in both the courses list and the set of course
 # grammar after tokenize
 ```
 expr := [term]
-    | [term] and [term] 
-    | [term] or [term] 
+    | [term] and [expr] 
+    | [term] or [expr] 
 
-term := [expr] 
-    /* NOTE: may not have parentheses e.g. "COMP1531": "COMP1511 or DPST1091 or COMP1917 or COMP1921" */
-    | ([expr])
+term := ([expr])
     | [course_code]
     | [digits] units
     | [digits] units in [course_prefix]
